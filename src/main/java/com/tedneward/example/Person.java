@@ -3,7 +3,7 @@ package com.tedneward.example;
 import java.beans.*;
 import java.util.*;
 
-public class Person {
+public class Person implements Comparable<Person> {
   private int age;
   private String name;
   private double salary;
@@ -18,23 +18,43 @@ public class Person {
     name = n;
     age = a;
     salary = s;
+    ssn = "";
   }
 
   public int getAge() {
     return age;
   }
+
+  public void setAge(int age) {
+      if (age < 0) {
+	  throw new IllegalArgumentException("Age must be >= 0");
+      }
+      this.age = age;
+  }
   
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+      if (name == null) {
+	  throw new IllegalArgumentException("Name cannot be null");
+      }
+      this.name = name;
   }
   
   public double getSalary() {
     return salary;
   }
+
+  public void setSalary(double salary) {
+      this.salary = salary;
+  }
   
   public String getSSN() {
     return ssn;
   }
+
   public void setSSN(String value) {
     String old = ssn;
     ssn = value;
@@ -42,6 +62,7 @@ public class Person {
     this.pcs.firePropertyChange("ssn", old, value);
     propertyChangeFired = true;
   }
+
   public boolean getPropertyChangeFired() {
     return propertyChangeFired;
   }
@@ -58,12 +79,42 @@ public class Person {
     return age + 10;
   }
   
-  public boolean equals(Person other) {
-    return (this.name.equals(p.name) && this.age == p.age);
+  @Override
+  public boolean equals(Object other) {
+      if (other instanceof Person) {
+	  Person otherPerson = (Person) other;
+	  return (this.getName().equals(otherPerson.getName()) 
+		  && this.getAge() == otherPerson.getAge());
+      } else {
+	  return false;
+      }
+  }
+  
+  @Override
+  public String toString() {
+      return "[Person name:" + this.getName() 
+	  + " age:" + this.getAge() + " salary:" + this.getSalary() + "]";
+  }
+  
+  @Override
+  public int compareTo(Person other) {
+      double diff = this.getSalary() - other.getSalary();
+      if (diff < 0) {
+	  return 1;
+      } else if (diff > 0) {
+	  return -1;
+      } else {
+	  return 0; 
+      }
   }
 
-  public String tostring() {
-    return "{{FIXME}}";
+  public static ArrayList<Person> getNewardFamily() {
+      ArrayList<Person> newardFamily = new ArrayList<Person>();
+      newardFamily.add(new Person("Ted", 41, 250000));
+      newardFamily.add(new Person("Charlotte", 43, 150000));
+      newardFamily.add(new Person("Michael", 22, 10000));
+      newardFamily.add(new Person("Matthew", 15, 0));
+      return newardFamily;
   }
 
   // PropertyChangeListener support; you shouldn't need to change any of
@@ -75,5 +126,11 @@ public class Person {
   }
   public void removePropertyChangeListener(PropertyChangeListener listener) {
       this.pcs.removePropertyChangeListener(listener);
+  }
+
+  public static class AgeComparator implements Comparator<Person> {
+      public int compare(Person thisP, Person other) {
+	  return thisP.getAge() - other.getAge();
+      }
   }
 }
