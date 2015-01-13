@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Greetings!
 This exercise is designed to test your ability to compile Java programs, modifying Java source code
 as necessary to make that happen.
@@ -92,6 +93,10 @@ Fire away, to either me or the TA.
 
 [1]: http://www.gradle.org
 [2]: http://brew.sh/
+=======
+# Android
+Android Dev class material
+>>>>>>> f411c2213e8da964e3e11b67d4c164a094995ab8
 =======
 # Android
 Android Dev class material
